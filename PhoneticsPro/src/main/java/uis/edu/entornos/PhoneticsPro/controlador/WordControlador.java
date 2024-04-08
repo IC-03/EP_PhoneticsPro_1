@@ -17,61 +17,60 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import uis.edu.entornos.PhoneticsPro.modelo.Users;
-import uis.edu.entornos.PhoneticsPro.servicio.UsersServicio;
+import uis.edu.entornos.PhoneticsPro.modelo.Word;
+import uis.edu.entornos.PhoneticsPro.servicio.WordServicio;
+
 
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/api/Users")
-public class UsersControlador {
+@RequestMapping("/api/Word")
+public class WordControlador {
     
     @Autowired
-    UsersServicio usersServicio;
+    WordServicio wordServicio;
     
     //Listar
     @GetMapping("/list")
-    public List<Users> listarUsers(){
-        return usersServicio.getUser();
+    public List<Word> listarWord(){
+        return wordServicio.getWord();
     }
     
     //Buscar por ID
     @GetMapping("/list/{id}")
-    public Users buscarPorId(@PathVariable Long id){
-        return usersServicio.buscarUser(id);
+    public Word buscarWord(@PathVariable Long id){
+        return wordServicio.buscarWord(id);
     }
     
     //Crear
     @PostMapping("/")
-    public ResponseEntity<Users> agregar(@RequestBody Users user){
-        Users obj = usersServicio.nuevoUser(user);
+    public ResponseEntity<Word> crearWord(@RequestBody Word word){
+        Word obj = wordServicio.nuevoWord(word);
         return new ResponseEntity<>(obj, HttpStatus.OK);
+                
     }
-    
-    
     
     //Actualizar
     @PutMapping("/")
-    public ResponseEntity<Users> actualizar(@RequestBody Users user){
-        Users obj = usersServicio.buscarUser(user.getId_user());
+    public ResponseEntity<Word> actualizar(@RequestBody Word word){
+        Word obj = wordServicio.buscarWord(word.getId_word());
         if(obj != null){
-            obj.setEmail(user.getEmail());
-            obj.setPassword_user(user.getPassword_user());
-            usersServicio.nuevoUser(obj);
-        } else{
+            obj.setTerm(word.getTerm());
+            obj.setTranscription(word.getTranscription());
+            wordServicio.nuevoWord(obj);
+        }else{
             return new ResponseEntity<>(obj, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(obj, HttpStatus.OK);
     }
     
     
-    
     //Borrar
     @DeleteMapping("/{id}")
-    public ResponseEntity<Users> borrar(@PathVariable Long id){
-        Users obj = usersServicio.buscarUser(id);
+    public ResponseEntity<Word> borrar(@PathVariable Long id){
+        Word obj = wordServicio.buscarWord(id);
         if(obj != null){
-            usersServicio.borrarUser(id);
+            wordServicio.borrarWord(id);
         } else{
             return new ResponseEntity<>(obj, HttpStatus.INTERNAL_SERVER_ERROR);
         }

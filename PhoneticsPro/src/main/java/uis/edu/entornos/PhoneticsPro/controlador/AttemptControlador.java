@@ -31,7 +31,7 @@ public class AttemptControlador {
     
     //Listar
     @GetMapping("/list")
-    public List<Attempt> cargarAttempt(){
+    public List<Attempt> listarAttempt(){
         return attemptServicio.getAttempt();
     }
     
