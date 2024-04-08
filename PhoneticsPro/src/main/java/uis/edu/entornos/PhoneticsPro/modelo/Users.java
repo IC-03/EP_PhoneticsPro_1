@@ -12,10 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 
-/**
- *
- * @author Carlos
- */
+
 
 @Entity
 @Table(name = Users.TABLE_NAME)

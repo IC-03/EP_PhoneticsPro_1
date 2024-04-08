@@ -11,10 +11,6 @@ import org.springframework.stereotype.Service;
 import uis.edu.entornos.PhoneticsPro.modelo.Users;
 import uis.edu.entornos.PhoneticsPro.repositorio.UsersRepositorio;
 
-/**
- *
- * @author Carlos
- */
 
 @Service
 @Transactional

@@ -17,64 +17,64 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import uis.edu.entornos.PhoneticsPro.modelo.Users;
-import uis.edu.entornos.PhoneticsPro.servicio.UsersServicio;
+import uis.edu.entornos.PhoneticsPro.modelo.Attempt;
+import uis.edu.entornos.PhoneticsPro.servicio.AttemptServicio;
 
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/api/Users")
-public class UsersControlador {
+@RequestMapping("/api/Attempt")
+public class AttemptControlador {
     
     @Autowired
-    UsersServicio usersServicio;
+    AttemptServicio attemptServicio;
     
     //Listar
     @GetMapping("/list")
-    public List<Users> cargarUsuarios(){
-        return usersServicio.getUser();
+    public List<Attempt> cargarAttempt(){
+        return attemptServicio.getAttempt();
     }
+    
     
     //Buscar por ID
     @GetMapping("/list/{id}")
-    public Users buscarPorId(@PathVariable Long id){
-        return usersServicio.buscarUser(id);
+    public Attempt buscarPorId(@PathVariable Long id){
+        return attemptServicio.buscarAttempt(id);
     }
     
     //Crear
     @PostMapping("/")
-    public ResponseEntity<Users> agregar(@RequestBody Users user){
-        Users obj = usersServicio.nuevoUser(user);
+    public ResponseEntity<Attempt> agregar(@RequestBody Attempt attempt){
+        Attempt obj = attemptServicio.nuevoAttempt(attempt);
         return new ResponseEntity<>(obj, HttpStatus.OK);
     }
-    
-    
     
     //Actualizar
     @PutMapping("/")
-    public ResponseEntity<Users> actualizar(@RequestBody Users user){
-        Users obj = usersServicio.buscarUser(user.getId_user());
+    public ResponseEntity<Attempt> actualizar(@RequestBody Attempt attempt){
+        Attempt obj = attemptServicio.buscarAttempt(attempt.getId_attempt());
         if(obj != null){
-            obj.setEmail(user.getEmail());
-            obj.setPassword_user(user.getPassword_user());
-            usersServicio.nuevoUser(obj);
+            obj.setCorrect_attempt(attempt.getCorrect_attempt());
+            obj.setDate_attempt(attempt.getDate_attempt());
+            obj.setTotal_attempt(attempt.getTotal_attempt());
+            attemptServicio.nuevoAttempt(obj);
         } else{
             return new ResponseEntity<>(obj, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(obj, HttpStatus.OK);
     }
-    
-    
     
     //Borrar
     @DeleteMapping("/{id}")
-    public ResponseEntity<Users> borrar(@PathVariable Long id){
-        Users obj = usersServicio.buscarUser(id);
+    public ResponseEntity<Attempt> borrar(@PathVariable Long id){
+        Attempt obj = attemptServicio.buscarAttempt(id);
         if(obj != null){
-            usersServicio.borrarUser(id);
+            attemptServicio.borrarAttempt(id);
         } else{
             return new ResponseEntity<>(obj, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(obj, HttpStatus.OK);
+        
     }
+    
 }

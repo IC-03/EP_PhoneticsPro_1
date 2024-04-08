@@ -5,17 +5,17 @@
 package uis.edu.entornos.PhoneticsPro.servicio;
 
 import java.util.List;
-import uis.edu.entornos.PhoneticsPro.modelo.Users;
+import uis.edu.entornos.PhoneticsPro.modelo.Attempt;
 
 
-public interface IUsersServicio {
+public interface IAttemptServicio {
     
-    List<Users> getUser();
+    List<Attempt> getAttempt();
     
-    Users nuevoUser(Users user);
+    Attempt nuevoAttempt(Attempt attempt);
     
-    Users buscarUser(Long id);
+    Attempt buscarAttempt(Long id);
     
-    int borrarUser(Long id);
+    int borrarAttempt(Long id);
     
 }

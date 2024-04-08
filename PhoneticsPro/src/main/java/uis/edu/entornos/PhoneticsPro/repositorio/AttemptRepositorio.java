@@ -5,10 +5,10 @@
 package uis.edu.entornos.PhoneticsPro.repositorio;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import uis.edu.entornos.PhoneticsPro.modelo.Users;
+import uis.edu.entornos.PhoneticsPro.modelo.Attempt;
 
 
 
-public interface UsersRepositorio extends JpaRepository<Users, Long>{
+public interface AttemptRepositorio extends JpaRepository<Attempt, Long>{
     
 }
