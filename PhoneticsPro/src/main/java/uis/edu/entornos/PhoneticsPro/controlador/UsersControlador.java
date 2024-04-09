@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import uis.edu.entornos.PhoneticsPro.modelo.LoginDto;
 import uis.edu.entornos.PhoneticsPro.modelo.Users;
 import uis.edu.entornos.PhoneticsPro.servicio.UsersServicio;
 
@@ -76,5 +77,16 @@ public class UsersControlador {
             return new ResponseEntity<>(obj, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(obj, HttpStatus.OK);
+    }
+    
+    //Validar Login
+    @PostMapping("/loginclient")
+    public int login(@RequestBody LoginDto user){
+        return usersServicio.login(user);
+    }
+    
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@RequestBody LoginDto user){
+        return usersServicio.ingresar(user);
     }
 }
