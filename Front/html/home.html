@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phonetics Pro</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/html/home.html">Phonetics Pro</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <img src="/images/menu.png" style="width: 16px; height: 16px;">
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/html/home.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/html/login.html">Iniciar Sesión</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/html/registro.html">Registro</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Acerca de</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Configuración</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Estructura del juego -->
+  <div class="container mt-5" style="background-color: rgb(204, 204, 204);">
+
+    <!--Modalidad: Take your time-->
+    <div class="row mt-2 d-flex justify-content-center">
+      <div class="col-md-10 m-2 p-3 text-center" style="background-color: #343a40; border-radius: 10px; color: white;">
+        <h2>Take your time</h2>
+        <p>¿Cuánto tiempo te toma transcribir estas palabras?</p>
+        <button class="btn btn-primary time-option custom-button">10</button>
+        <button class="btn btn-primary time-option custom-button">25</button>
+        <button class="btn btn-primary time-option custom-button">40</button>
+      </div>
+    </div>
+
+    <!--Modalidad: Against the clock-->
+    <div class="row mt-2 d-flex justify-content-center">
+      <div class="col-md-10 mb-2 p-3 text-center"
+        style="background-color: #343a40; border-radius: 10px; color: white; ">
+        <h2>Against the clock</h2>
+        <p>¿Cuántas palabras logras transcribir?</p>
+        <button class="btn btn-primary time-option custom-button">15s</button>
+        <button class="btn btn-primary time-option custom-button">30s</button>
+        <button class="btn btn-primary time-option custom-button">60s</button>
+      </div>
+    </div>
+
+    <!--Boton de Start-->
+    <div class="row mt-3">
+      <div class="col-md-12 mb-2">
+        <button class="btn btn-success btn-lg btn-block" id="start-button">START</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Estructura del juego activo -->
+  <div class="container mt-5 p-3" id="game-container" style="display: none; background-color: rgb(204, 204, 204);">
+    <div class="text-center" id="game">
+      <div class="p-2" id="game-timer"></div>
+      <div class="p-2" id="game-words"></div>
+      <input type="text" id="word-input" class="form-control" placeholder="Type here...">
+    </div>
+  </div>
+
+  <!-- Estructura de los resultados -->
+  <div class="container mt-5 p-3" id="result-container" style="display: none; background-color: rgb(204, 204, 204);">
+    <div class="text-center" id="result">
+      <h2>Resultados</h2>
+      <p id="result-time"></p>
+      <p id="result-words"></p>
+      <button class="btn btn-success" id="restart-button">Jugar de nuevo</button>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS y jQuery -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="/js/game.js"></script>
+</body>
+
+</body>
+
+</html>
