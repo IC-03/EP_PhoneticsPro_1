@@ -28,5 +28,40 @@ const eyeIcons = {
     toggleButton.innerHTML = isEyeOpen ? eyeIcons.closed : eyeIcons.open;
     passwordField.type = isEyeOpen ? "text" : "password";
  }
- 
  document.addEventListener("DOMContentLoaded", addListeners);
+
+
+ const dir = "http://localhost:8094/api/Users/login"
+
+ function validarLogin(){
+     var email = document.getElementById('email').value;
+     var password_user = document.getElementById('password-field').value;
+ 
+     var datosLogin = {'email': email, 'password_user': password_user};
+ 
+     fetch(dir, {
+         method: 'POST',
+         headers: {
+             'Content-type': 'application/json'
+         },
+         body: JSON.stringify(datosLogin)
+     })
+     .then(response =>{
+         if(!response.ok){
+             throw new Error('Ha ocurrido un error');
+         }
+         return response.json();
+     })
+     .then(data =>{
+         if (data.statusCode === 200) {
+             window.location = "../html/home.html";
+         } else {
+             alert(data.Mensaje);
+         }
+     })
+     .catch(error => {
+         console.error('Error', error);
+         alert('Ha ocurrido un error')
+     });
+ 
+ }
