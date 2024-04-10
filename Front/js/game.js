@@ -1,3 +1,21 @@
+document.addEventListener('DOMContentLoaded', function(){
+    const perfilLink = document.getElementById('perfilLink');
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+
+    const dirUser = 'http://localhost:8094/api/Users/list/' + id;
+
+    fetch(dirUser)
+        .then(response => response.json())
+        .then( data => {
+            if (perfilLink && id) {
+                perfilLink.textContent = 'Perfil de ' + data.name_user;
+            }
+        });
+        perfilLink.href = '../html/perfil.html?id=' + id;
+})
+
 $(document).ready(function() {
     // Variables para el juego
     var gameMode;

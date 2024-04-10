@@ -30,16 +30,15 @@ const eyeIcons = {
  }
  document.addEventListener("DOMContentLoaded", addListeners);
 
-
  const dir = "http://localhost:8094/api/Users/login"
 
- function validarLogin(){
+ async function validarLogin(){
      var email = document.getElementById('email').value;
      var password_user = document.getElementById('password-field').value;
  
      var datosLogin = {'email': email, 'password_user': password_user};
  
-     fetch(dir, {
+     await fetch(dir, {
          method: 'POST',
          headers: {
              'Content-type': 'application/json'
@@ -54,14 +53,18 @@ const eyeIcons = {
      })
      .then(data =>{
          if (data.statusCode === 200) {
-             window.location = "../html/home.html";
+            usuario = data.Usuario;
+            console.log(usuario)
+            window.location.href = '../html/home.html?id=' + usuario.id_user;
          } else {
              alert(data.Mensaje);
          }
      })
      .catch(error => {
          console.error('Error', error);
-         alert('Ha ocurrido un error')
+         alert('Datos incorrectos')
      });
- 
+     console.log(usuario)
+
  }
+ 

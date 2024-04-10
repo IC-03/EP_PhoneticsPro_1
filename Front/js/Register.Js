@@ -6,7 +6,6 @@ function registrarUsuario(){
     var name_user = document.getElementById('name_user').value;
 
     var datosRegistro = {'email': email, 'password_user': password_user, 'name_user': name_user};
-    console.log(datosRegistro);
 
     fetch(dir, {
         method: 'POST',
@@ -23,7 +22,7 @@ function registrarUsuario(){
     })
     .then(data => {
         console.log('Usuario registrado con éxito:', data);
-        window.location = "../html/home.html";
+        window.location = '../html/home.html?id=' + data.id_user;
 
     })
     .catch(error => {
