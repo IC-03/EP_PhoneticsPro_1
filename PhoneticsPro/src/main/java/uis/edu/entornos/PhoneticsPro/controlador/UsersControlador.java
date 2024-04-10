@@ -58,6 +58,7 @@ public class UsersControlador {
         if(obj != null){
             obj.setEmail(user.getEmail());
             obj.setPassword_user(user.getPassword_user());
+            obj.setName_user(user.getName_user());
             usersServicio.nuevoUser(obj);
         } else{
             return new ResponseEntity<>(obj, HttpStatus.INTERNAL_SERVER_ERROR);

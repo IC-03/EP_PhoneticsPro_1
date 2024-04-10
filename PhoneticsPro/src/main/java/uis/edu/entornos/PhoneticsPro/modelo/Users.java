@@ -30,15 +30,18 @@ public class Users {
     @Column(name = "password_user")
     private String password_user;
 
+    @Column(name = "name_user")
+    private String name_user;
     // Constructores 
 
     public Users() {
     }
-    
-    public Users(Long id_user, String email, String password_user) {
+
+    public Users(Long id_user, String email, String password_user, String name_user) {
         this.id_user = id_user;
         this.email = email;
         this.password_user = password_user;
+        this.name_user = name_user;
     }
 
     
@@ -68,7 +71,12 @@ public class Users {
         this.password_user = password_user;
     }
 
-    
-    
+    public String getName_user() {
+        return name_user;
+    }
+
+    public void setName_user(String name_user) {
+        this.name_user = name_user;
+    }
 
 }
