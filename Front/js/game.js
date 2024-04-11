@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', function(){
     const perfilLink = document.getElementById('perfilLink');
+    const Home = document.getElementById('Home');
+    const Home2 = document.getElementById('Home2');
 
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
@@ -13,15 +15,37 @@ document.addEventListener('DOMContentLoaded', function(){
                 perfilLink.textContent = 'Perfil de ' + data.name_user;
             }
         });
+        Home.href = '../html/home.html?id=' +id;
+        Home2.href = '../html/home.html?id=' +id;
         perfilLink.href = '../html/perfil.html?id=' + id;
 })
 
-$(document).ready(function() {
+
+async function getWords(){
+let term = [];
+let transcription = [];
+await fetch('http://localhost:8094/api/Word/list')
+        .then(response => response.json())
+        .then( data => {
+            data.forEach(palabra => {
+                const word = {'term': palabra.term, 'transcription': palabra.transcription};
+                term.push(word.term);
+                transcription.push(word.transcription);
+            });
+        })
+        .catch(error =>{
+            console.error('Error al cargar las palabras', error);
+            alert('Ha ocurrido un error, intente mas tarde');
+        });
+        return([term, transcription])
+    }
+
+$(document).ready(async function() {
     // Variables para el juego
     var gameMode;
     var timerInterval;
     var timeLimit;
-    var words = ["apple", "banana", "cherry", "grape", "orange"];
+    var [words, trans] = await getWords();
     var wordsTyped = 0;
     var correctWordsCount = 0;
     var incorrectWordsCount = 0;
