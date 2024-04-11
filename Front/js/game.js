@@ -126,6 +126,58 @@ $(document).ready(async function() {
         $("#result-time").text("Tiempo transcurrido: " + elapsedTimeString);
         $("#result-words").text("Palabras correctas: " + correctWordsCount + " / " + wordsTyped);
         $("#result-words").append("<br>Palabras incorrectas: " + incorrectWordsCount + " / " + wordsTyped);
+        
+        //Enviar el resultado a la BD
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+        const dirUser = 'http://localhost:8094/api/Users/list/' + id;
+        fetch(dirUser)
+            .then(response => response.json())
+            .then( data => {
+                let attempt = {"total_attempt": wordsTyped,
+                      "correct_attempt": correctWordsCount,
+                      "date_attempt": getDate_attempt(),
+                      "id_user": {
+                        "id_user": id,
+                        "email": data.email,
+                        "password_user": data.password_user,
+                        "name_user": data.name_user
+                      }};
+                    
+                    dirPostAttempt = 'http://localhost:8094/api/Attempt/';
+                    fetch(dirPostAttempt, {
+                        method: 'POST',
+                        headers: {
+                            'Content-type': 'application/json'
+                        },
+                        body: JSON.stringify(attempt)
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('No se pudo registrar el intento');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Intento registrado con éxito:', data);
+                    })
+                    .catch(error => {
+                        console.error('Error al registrar el intento:', error);
+                        alert('Ha ocurrido un error al registrar el intento');
+                    });
+            });
+
+        
+        
+    }
+
+    //Funcion para obtener la fecha actual
+    function getDate_attempt() {
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Se agrega 1 porque los meses van de 0 a 11
+        const day = currentDate.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
     }
 
     // Función para convertir tiempo en segundos a formato hh:mm:ss
