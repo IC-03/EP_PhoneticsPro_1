@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function(){
             document.getElementById('mostrarAttempt').appendChild(listaIntentos);
         })
         .catch(error =>{
-            console.error('error al cargar las palabras', error);
+            console.error('error al cargar los intentos', error);
             alert('ha ocurrido un error, intente mas tarde');
         });
 })
