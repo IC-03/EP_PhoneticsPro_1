@@ -7,6 +7,7 @@
   <title>Phonetics Pro</title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <link href="../css/style.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/keyboard.css">
 </head>
 
 <body>
@@ -80,6 +81,78 @@
       <div class="p-2" id="game-timer"></div>
       <div class="p-2" id="game-words"></div>
       <input type="text" id="word-input" class="form-control" placeholder="Type here...">
+      <div class="keyboard">
+        <!-- <textarea id="input" rows="4" cols="50"></textarea> --> 
+        <div class="keys">
+          <div class="row">
+            <button class="green" onclick="insertCharacter('i')">i</button>
+            <button class="blue" onclick="insertCharacter('ɪ')">ɪ</button>
+            <button class="purple" onclick="insertCharacter('ʊ')">ʊ</button>
+            <button class="orange" onclick="insertCharacter('u')">u</button>
+            <button class="red" onclick="insertCharacter('ɪ')">ɪ</button>
+            <button class="yellow" onclick="insertCharacter('ə')">ə</button>
+            <button class="pink" onclick="insertCharacter('ɛ')">ɛ</button>
+            <button class="teal" onclick="insertCharacter('æ')">æ</button>
+            <button class="cyan" onclick="insertCharacter('ɑ')">ɑ</button>
+            <button class="indigo" onclick="insertCharacter('ɒ')">ɒ</button>
+          </div>
+          <div class="row">
+            <button class="green" onclick="insertCharacter('ɔ')">ɔ</button>
+            <button class="blue" onclick="insertCharacter('ʌ')">ʌ</button>
+            <button class="purple" onclick="insertCharacter('aɪ')">aɪ</button>
+            <button class="orange" onclick="insertCharacter('aʊ')">aʊ</button>
+            <button class="red" onclick="insertCharacter('eɪ')">eɪ</button>
+            <button class="yellow" onclick="insertCharacter('oʊ')">oʊ</button>
+            <button class="pink" onclick="insertCharacter('oɪ')">oɪ</button>
+            <button class="teal" onclick="insertCharacter('ɜɪ')">ɜɪ</button>
+            <button class="cyan" onclick="insertCharacter('ɜə')">ɜə</button>
+            <button class="indigo" onclick="insertCharacter('ɑɪ')">ɑɪ</button>
+          </div>
+          <div class="row">
+            <button class="green" onclick="insertCharacter('ɑʊ')">ɑʊ</button>
+            <button class="blue" onclick="insertCharacter('eɪ')">eɪ</button>
+            <button class="purple" onclick="insertCharacter('oʊ')">oʊ</button>
+            <button class="orange" onclick="insertCharacter('p')">p</button>
+            <button class="red" onclick="insertCharacter('b')">b</button>
+            <button class="yellow" onclick="insertCharacter('t')">t</button>
+            <button class="pink" onclick="insertCharacter('d')">d</button>
+            <button class="teal" onclick="insertCharacter('k')">k</button>
+            <button class="cyan" onclick="insertCharacter('g')">g</button>
+          </div>
+          <div class="row">
+            <button class="green" onclick="insertCharacter('ʔ')">ʔ</button>
+            <button class="blue" onclick="insertCharacter('m')">m</button>
+            <button class="purple" onclick="insertCharacter('n')">n</button>
+            <button class="orange" onclick="insertCharacter('ŋ')">ŋ</button>
+            <button class="red" onclick="insertCharacter('f')">f</button>
+            <button class="yellow" onclick="insertCharacter('v')">v</button>
+            <button class="pink" onclick="insertCharacter('θ')">θ</button>
+            <button class="teal" onclick="insertCharacter('ð')">ð</button>
+            <button class="cyan" onclick="insertCharacter('s')">s</button>
+          </div>
+          <div class="row">
+            <button class="green" onclick="insertCharacter('z')">z</button>
+            <button class="blue" onclick="insertCharacter('ʃ')">ʃ</button>
+            <button class="purple" onclick="insertCharacter('ʒ')">ʒ</button>
+            <button class="orange" onclick="insertCharacter('h')">h</button>
+            <button class="red" onclick="insertCharacter('ʧ')">ʧ</button>
+            <button class="yellow" onclick="insertCharacter('ʤ')">ʤ</button>
+            <button class="pink" onclick="insertCharacter('l')">l</button>
+            <button class="teal" onclick="insertCharacter('r')">r</button>
+            <button class="cyan" onclick="insertCharacter('w')">w</button>
+          </div>
+          <div class="row">
+            <button class="green" onclick="insertCharacter('j')">j</button>
+            <button class="blue" onclick="insertCharacter('ʍ')">ʍ</button>
+            <button class="purple" onclick="insertCharacter('ʔ')">ʔ</button>
+          </div>
+          <div class="row">
+            <button class="grey" onclick="insertSpace()">Space</button>
+            <button class="grey" onclick="deleteCharacter()">Borrar</button>
+            <button class="grey" onclick="clearAll()">Limpiar todo</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -98,6 +171,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="../js/game.js"></script>
+  <script src="../js/keyboard.js"></script>
 </body>
 
 </body>
