@@ -85,23 +85,43 @@ function borrarPerfil(){
     if(seguro.checked){
         const comprobarContr = document.getElementById('contVieja').value;
         if(comprobarContr == usuario.password_user){
-            fetch(datoABorrar, {
-                method: 'DELETE'
+
+            fetch('http://localhost:8094/api/Attempt/list')
+            .then(response => response.json())
+            .then( data => {
+                data.forEach(intento => {
+                    if(id==intento.id_user.id_user){
+                        //aqui el codigo para eliminar attempts
+                        fetch('http://localhost:8094/api/Attempt/'+intento.id_attempt, {
+                            method: 'DELETE'
+                        })
+                    }   
+                });
+                
+                fetch(datoABorrar, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('No se pudo borrar la cuenta');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Usuario borrado con éxito:');
+                    window.location = '../html/home.html';
+                })
+                .catch(error => {
+                    console.error('Error al borrar usuario:', error);
+                    alert('Ha ocurrido un error al borrar el usuario');
+                })
+
+
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('No se pudo norrar la cuenta');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Usuario borrado con éxito:');
-                window.location = '../html/home.html';
-            })
-            .catch(error => {
-                console.error('Error al borrar usuario:', error);
-                alert('Ha ocurrido un error al borrar el usuario');
-            })
+            .catch(error =>{
+                console.error('error al borrar las palabras', error);
+                alert('ha ocurrido un error, intente mas tarde');
+            });
         }else{
             return alert("Su antigua contraseña no coincide");
         }

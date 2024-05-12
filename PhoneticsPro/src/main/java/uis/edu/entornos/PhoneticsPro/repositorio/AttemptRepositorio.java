@@ -10,5 +10,5 @@ import uis.edu.entornos.PhoneticsPro.modelo.Attempt;
 
 
 public interface AttemptRepositorio extends JpaRepository<Attempt, Long>{
-    
+
 }

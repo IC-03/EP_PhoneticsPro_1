@@ -37,6 +37,10 @@ body {
     cursor: pointer;
   }
   
+  #restart-button{
+    width: 150px;
+  }
+
   .green {
     background-color: #4caf50;
     color: white;
