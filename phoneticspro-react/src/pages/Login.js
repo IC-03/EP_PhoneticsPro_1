@@ -10,10 +10,10 @@ const Login = () => {
 
   const [usuario, setUsuario] = useState({
     email: "",
-    password: "",
+    password_user: "",
   });
 
-  const { email, password } = usuario;
+  const { email, password_user } = usuario;
 
   const onChange = (e) => {
     setUsuario({
@@ -23,7 +23,7 @@ const Login = () => {
   };
 
   const login = async () => {
-    if (password.length < 8) {
+    if (password_user.length < 6) {
       const msg = "La contraseña debe ser al menos de 6 caracteres.";
       swal({
         title: "Error",
@@ -42,15 +42,15 @@ const Login = () => {
     } else {
       const data = {
         email: usuario.email,
-        password: usuario.password,
+        password_user: usuario.password_user,
       };
 
-      const response = await APIInvoke.invokePOST(`api/usuarios/login`, data);
+      const response = await APIInvoke.invokePOST(`api/Users/login`, data);
       const mensaje = response.Mensaje;
 
       console.log(response);
 
-      if (mensaje === "Alerta:Usuario o Password incorrectos") {
+      if (mensaje === "Alerta: email o password incorrectos") {
         const msg =
           "No fue posible iniciar la sesión verifique los datos ingresados.";
         swal({
@@ -75,7 +75,7 @@ const Login = () => {
         localStorage.setItem("token", jwt);
 
         //redireccionamos al home la pagina principal
-        navigate("/home");
+        navigate("/");
       }
     }
   };
@@ -124,6 +124,10 @@ const Login = () => {
                 id="password-field"
                 className="form-control"
                 placeholder="************"
+                name="password_user"
+                value={password_user}
+                onChange={onChange}
+                
               />
               <div
                 className="toggle-button"
@@ -144,7 +148,7 @@ const Login = () => {
               Recordar contraseña
             </label>
           </div>
-          <p>¿Olvidó su contraseña?</p>
+
           <button
             className="btn btn-large btn-success text-center" /*onClick={validarLogin}*/
           >
