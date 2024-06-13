@@ -1,142 +1,43 @@
-// Game.js
-import React, { useState, useEffect } from 'react';
-import { getWords, getDate_attempt, formatTime } from '../utils/GameUtils';
+import React, { useState, useEffect, useRef } from "react";
+import Keyboard from "./Keyboard";
+import "../assets/css/game.css";
+import audiobtn from "../assets/images/sonido.png";
+import swal from "sweetalert";
+import cronometro from "../assets/images/cronometro.png";
+import tempo from "../assets/images/tempo.png";
+import keyboardstyle from "../assets/css/keyboard.css";
 
 const Game = () => {
-  /*
-  const [words, setWords] = useState([]);
   const [gameMode, setGameMode] = useState(undefined);
-  const [timerInterval, setTimerInterval] = useState(null);
-  const [timeLimit, setTimeLimit] = useState(null);
+  const [timeLimit, setTimeLimit] = useState(0);
+  const [words, setWords] = useState([]);
   const [wordsTyped, setWordsTyped] = useState(0);
   const [correctWordsCount, setCorrectWordsCount] = useState(0);
   const [incorrectWordsCount, setIncorrectWordsCount] = useState(0);
-  const [startTime, setStartTime] = useState(null);
+  const [currentWord, setCurrentWord] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  const [isGameActive, setIsGameActive] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const [resultTime, setResultTime] = useState("");
+  const [resultWords, setResultWords] = useState("");
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const timerRef = useRef(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const [term, transcription] = await getWords();
-      setWords(term);
+    const fetchWords = async () => {
+      try {
+        const response = await fetch("http://localhost:8094/api/Word/list");
+        const data = await response.json();
+        const term = data.map((palabra) => palabra.term);
+        setWords(term);
+      } catch (error) {
+        console.error("Error al cargar las palabras", error);
+        alert("Ha ocurrido un error, intente más tarde");
+      }
     };
-    fetchData();
+
+    fetchWords();
   }, []);
-
-  const startGame = () => {
-    setWordsTyped(0);
-    setCorrectWordsCount(0);
-    setIncorrectWordsCount(0);
-    setStartTime(new Date().getTime());
-    if (gameMode === "against the clock") {
-      displayTimer(timeLimit * 1000);
-      setStartTime(new Date().getTime());
-      setTimerInterval(setInterval(() => {
-        const currentTime = new Date().getTime();
-        const elapsedTime = Math.floor((currentTime - startTime) / 1000);
-        const remainingTime = timeLimit - elapsedTime;
-        if (remainingTime <= 0) {
-          clearInterval(timerInterval);
-          endGame();
-        } else {
-          displayTimer(remainingTime * 1000);
-        }
-      }, 1000));
-    } else {
-      displayTimer(timeLimit * 1000);
-      updateElapsedTime();
-    }
-    displayNextWord();
-    document.getElementById("word-input").focus();
-  };
-
-  const displayTimer = (time) => {
-    const minutes = Math.floor((time / (1000 * 60)) % 60);
-    const seconds = Math.floor((time / 1000) % 60);
-    const timeString = (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
-    document.getElementById("game-timer").innerText = "Tiempo restante: " + timeString;
-  };
-
-  const endGame = () => {
-    document.getElementById("game-container").style.display = "none";
-    document.getElementById("result-container").style.display = "block";
-    const elapsedTime = Math.floor((new Date().getTime() - startTime) / 1000);
-    const elapsedTimeString = formatTime(elapsedTime);
-    document.getElementById("result-time").innerText = "Tiempo transcurrido: " + elapsedTimeString;
-    document.getElementById("result-words").innerText = "Palabras correctas: " + correctWordsCount + " / " + wordsTyped;
-    document.getElementById("result-words").innerHTML += "<br>Palabras incorrectas: " + incorrectWordsCount + " / " + wordsTyped;
-    //Enviar el resultado a la BD
-    const id = new URLSearchParams(window.location.search).get('id');
-    const dirUser = 'http://localhost:8094/api/Users/list/' + id;
-    fetch(dirUser)
-      .then(response => response.json())
-      .then(data => {
-        const attempt = {
-          "total_attempt": wordsTyped,
-          "correct_attempt": correctWordsCount,
-          "date_attempt": getDate_attempt(),
-          "id_user": {
-            "id_user": id,
-            "email": data.email,
-            "password_user": data.password_user,
-            "name_user": data.name_user
-          }
-        };
-        const dirPostAttempt = 'http://localhost:8094/api/Attempt/';
-        fetch(dirPostAttempt, {
-          method: 'POST',
-          headers: {
-            'Content-type': 'application/json'
-          },
-          body: JSON.stringify(attempt)
-        })
-          .then(response => {
-            if (!response.ok) {
-              throw new Error('No se pudo registrar el intento');
-            }
-            return response.json();
-          })
-          .then(data => {
-            console.log('Intento registrado con éxito:', data);
-          })
-          .catch(error => {
-            console.error('Error al registrar el intento:', error);
-            alert('Ha ocurrido un error al registrar el intento');
-          });
-      });
-  };
-
-  const displayNextWord = () => {
-    document.getElementById("word-input").value = '';
-    const randomIndex = Math.floor(Math.random() * words.length);
-    document.getElementById("game-words").innerText = words[randomIndex];
-  };
-
-  const updateElapsedTime = () => {
-    setInterval(() => {
-      const currentTime = new Date().getTime();
-      const elapsedTime = Math.floor((currentTime - startTime) / 1000);
-      const elapsedTimeString = formatTime(elapsedTime);
-      document.getElementById("game-timer").innerText = "Tiempo transcurrido: " + elapsedTimeString;
-    }, 1000);
-  };
-
-  const handleKeyPress = (event) => {
-    if (event.which === 13) { // Tecla Enter presionada
-      const typedWord = event.target.value.trim().toLowerCase();
-      const randomWord = document.getElementById("game-words").innerText.trim().toLowerCase();
-      if (typedWord === randomWord) {
-        setCorrectWordsCount(correctWordsCount + 1);
-      } else {
-        setIncorrectWordsCount(incorrectWordsCount + 1);
-      }
-      setWordsTyped(wordsTyped + 1);
-      if (gameMode === "take your time" && wordsTyped >= timeLimit) {
-        clearInterval(timerInterval);
-        endGame();
-      } else {
-        displayNextWord();
-      }
-    }
-  };
 
   const handleTimeOptionClick = (selectedTime) => {
     if (selectedTime.endsWith("s")) {
@@ -146,56 +47,326 @@ const Game = () => {
       setGameMode("take your time");
       setTimeLimit(parseInt(selectedTime));
     }
-  };*/
+  };
+
+  const startGame = () => {
+    if (!gameMode) {
+      swal(
+        "Advertencia",
+        "No se puede jugar si no has seleccionado ninguna opción",
+        "warning"
+      );
+      return;
+    }
+    console.log("Starting game");
+    clearInterval(timerRef.current);
+    setElapsedTime(0);
+    setWordsTyped(0);
+    setCorrectWordsCount(0);
+    setIncorrectWordsCount(0);
+    setIsGameActive(true);
+    setShowResults(false);
+    displayNextWord();
+    if (gameMode === "take your time") {
+      startChronometer();
+    } else if (gameMode === "against the clock") {
+      startTimer();
+    }
+  };
+
+  const startChronometer = () => {
+    console.log("Starting chronometer");
+    timerRef.current = setInterval(() => {
+      setElapsedTime((prevElapsedTime) => prevElapsedTime + 1);
+    }, 1000);
+  };
+
+  const startTimer = () => {
+    console.log("Starting timer");
+    timerRef.current = setInterval(() => {
+      setElapsedTime((prevElapsedTime) => {
+        if (prevElapsedTime + 1 >= timeLimit) {
+          clearInterval(timerRef.current);
+          endGame();
+        }
+        return prevElapsedTime + 1;
+      });
+    }, 1000);
+  };
+
+  const endGame = () => {
+    console.log("Ending game");
+    clearInterval(timerRef.current);
+    setIsGameActive(false);
+  };
+
+  useEffect(() => {
+    if (!isGameActive && wordsTyped > 0) {
+      const result = formatTime(elapsedTime);
+      setResultTime(result);
+      setResultWords(
+        `Palabras correctas: ${correctWordsCount} / ${wordsTyped}\nPalabras incorrectas: ${incorrectWordsCount} / ${wordsTyped}`
+      );
+      console.log(`Result Time: ${result}`);
+      console.log(
+        `Result Words: Palabras correctas: ${correctWordsCount} / ${wordsTyped}, Palabras incorrectas: ${incorrectWordsCount} / ${wordsTyped}`
+      );
+      setShowResults(true);
+    }
+  }, [isGameActive]);
+
+  const displayNextWord = () => {
+    if (words.length > 0) {
+      const randomIndex = Math.floor(Math.random() * words.length);
+      setCurrentWord(words[randomIndex]);
+      console.log(`New word: ${words[randomIndex]}`);
+    }
+  };
+
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleInputKeyPress = (event) => {
+    if (event.which === 13 && isGameActive) {
+      processInput();
+    }
+  };
+
+  const handleEnterPress = () => {
+    if (isGameActive) {
+      processInput();
+    }
+  };
+
+  const processInput = () => {
+    const typedWord = inputValue.trim().toLowerCase();
+    const randomWord = currentWord.trim().toLowerCase();
+    console.log(`Typed: ${typedWord}, Current: ${randomWord}`);
+    if (typedWord === randomWord) {
+      setCorrectWordsCount((prevCount) => prevCount + 1);
+      console.log(`Correct words count: ${correctWordsCount + 1}`);
+    } else {
+      setIncorrectWordsCount((prevCount) => prevCount + 1);
+      console.log(`Incorrect words count: ${incorrectWordsCount + 1}`);
+    }
+    setWordsTyped((prevCount) => prevCount + 1);
+    console.log(`Words typed: ${wordsTyped + 1}`);
+    setInputValue("");
+
+    if (gameMode === "take your time" && wordsTyped + 1 >= timeLimit) {
+      endGame();
+    } else {
+      displayNextWord();
+    }
+  };
+
+  const formatTime = (timeInSeconds) => {
+    const hours = Math.floor(timeInSeconds / 3600);
+    const minutes = Math.floor((timeInSeconds % 3600) / 60);
+    const seconds = Math.floor(timeInSeconds % 60);
+    return `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+  };
+
+  const handleDeleteCharacter = () => {
+    setInputValue((prev) => prev.slice(0, -1));
+  };
+
+  const handleClearAll = () => {
+    setInputValue("");
+  };
+
+  const handleCharacterInsert = (char) => {
+    setInputValue((prev) => prev + char);
+  };
 
   return (
-    /*<div className="container mt-5" style={{ backgroundColor: "rgb(204, 204, 204)" }}>
-      <div className="row mt-2 d-flex justify-content-center">
-        <div className="col-md-10 m-2 p-3 text-center" style={{ backgroundColor: "#343a40", borderRadius: 10, color: "white" }}>
-          <h2>Take your time</h2>
-          <p>¿Cuánto tiempo te toma transcribir estas palabras?</p>
-          <button className="btn btn-primary time-option custom-button" onClick={() => handleTimeOptionClick("10")}>10</button>
-          <button className="btn btn-primary time-option custom-button" onClick={() => handleTimeOptionClick("25")}>25</button>
-          <button className="btn btn-primary time-option custom-button" onClick={() => handleTimeOptionClick("40")}>40</button>
+    <div>
+      {!isGameActive && !showResults ? (
+        <div
+          className="container mt-4 mb-4 mode-selection"
+          style={{
+            backgroundColor: "rgb(204, 204, 204)",
+            borderRadius: "10px",
+          }}
+        >
+          <div className="row mt-2 d-flex justify-content-center">
+            <div
+              className="col-md-10 m-2 p-3"
+              style={{
+                backgroundColor: "#343a40",
+                borderRadius: 10,
+                color: "white",
+              }}
+            >
+              <div className="d-flex flex-column align-items-center">
+                <div className="d-flex align-items-center mb-3">
+                  <img
+                    src={cronometro}
+                    alt="cronometro"
+                    className="img-fluid"
+                    style={{ maxWidth: "100px", marginRight: "20px" }}
+                  />
+                  <div className="text-center">
+                    <h2>Take your time</h2>
+                    <p>¿Cuánto tiempo te toma transcribir estas palabras?</p>
+                    <div className="btn-opciones">
+                      <button
+                        className="btn btn-primary time-option custom-button"
+                        onClick={() => handleTimeOptionClick("10")}
+                      >
+                        10
+                      </button>
+                      <button
+                        className="btn btn-primary time-option custom-button"
+                        onClick={() => handleTimeOptionClick("25")}
+                      >
+                        25
+                      </button>
+                      <button
+                        className="btn btn-primary time-option custom-button"
+                        onClick={() => handleTimeOptionClick("40")}
+                      >
+                        40
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="row mt-2 d-flex justify-content-center">
+            <div
+              className="col-md-10 mx-2 mb-2 p-3"
+              style={{
+                backgroundColor: "#343a40",
+                borderRadius: 10,
+                color: "white",
+              }}
+            >
+              <div className="d-flex flex-column align-items-center">
+                <div className="d-flex align-items-center mb-2">
+                  <img
+                    src={tempo}
+                    alt="temporizador"
+                    className="img-fluid"
+                    style={{ maxWidth: "100px", marginRight: "20px" }}
+                  />
+                  <div className="text-center">
+                    <h2>Against the clock</h2>
+                    <p>¿Cuántas palabras logras transcribir?</p>
+                    <div className="btn-opciones">
+                      <button
+                        className="btn btn-primary time-option custom-button"
+                        onClick={() => handleTimeOptionClick("10s")}
+                      >
+                        10s
+                      </button>
+                      <button
+                        className="btn btn-primary time-option custom-button"
+                        onClick={() => handleTimeOptionClick("30s")}
+                      >
+                        30s
+                      </button>
+                      <button
+                        className="btn btn-primary time-option custom-button"
+                        onClick={() => handleTimeOptionClick("60s")}
+                      >
+                        60s
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="row d-flex justify-content-center">
+            <div className="col-md-7 mb-3">
+              <button
+                className="btn btn-success btn-lg btn-block"
+                id="start-button"
+                onClick={startGame}
+              >
+                START
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="row mt-2 d-flex justify-content-center">
-        <div className="col-md-10 mb-2 p-3 text-center" style={{ backgroundColor: "#343a40", borderRadius: 10, color: "white" }}>
-          <h2>Against the clock</h2>
-          <p>¿Cuántas palabras logras transcribir?</p>
-          <button className="btn btn-primary time-option custom-button" onClick={() => handleTimeOptionClick("15s")}>15s</button>
-          <button className="btn btn-primary time-option custom-button" onClick={() => handleTimeOptionClick("30s")}>30s</button>
-          <button className="btn btn-primary time-option custom-button" onClick={() => handleTimeOptionClick("60s")}>60s</button>
+      ) : isGameActive ? (
+        <div
+          className="container mt-4 mb-4 p-2"
+          id="game-container"
+          style={{ backgroundColor: "rgb(204, 204, 204)", borderRadius: "10px" }}
+        >
+          <div className="text-center" id="game">
+            <div className="p-2" id="game-timer">
+              {gameMode === "take your time"
+                ? "Tiempo transcurrido: "
+                : "Tiempo restante: "}
+              {formatTime(
+                gameMode === "take your time"
+                  ? elapsedTime
+                  : Math.max(timeLimit - elapsedTime, 0)
+              )}
+            </div>
+            <div
+              className="p-2"
+              id="game-words"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <button className={`${keyboardstyle.bttn}$ bttn`}>
+                <img
+                  src={audiobtn}
+                  alt="sonido"
+                  style={{ width: 28, height: 28 }}
+                />
+              </button>
+              <span style={{ marginLeft: "8px" }}>{currentWord}</span>
+            </div>
+            <input
+              type="text"
+              id="word-input"
+              className="form-control"
+              value={inputValue}
+              onChange={handleInputChange}
+              onKeyDown={handleInputKeyPress}
+              disabled={!isGameActive}
+            />
+            <Keyboard
+              onCharacterInsert={handleCharacterInsert}
+              onDelete={handleDeleteCharacter}
+              onClear={handleClearAll}
+              onEnter={handleEnterPress} // Pasa la función handleEnterPress como prop
+            />
+          </div>
         </div>
-      </div>
-      <div className="row mt-3">
-        <div className="col-md-12 mb-2">
-          <button className="btn btn-success btn-lg btn-block" id="start-button" onClick={startGame}>START</button>
+      ) : (
+        <div
+          className="container mt-5 p-3"
+          style={{ backgroundColor: "rgb(204, 204, 204)" }}
+        >
+          <div className="text-center" id="result">
+            <h2>Resultados</h2>
+            <p id="result-time">{resultTime}</p>
+            <p id="result-words">{resultWords}</p>
+            <button
+              className="btn btn-success"
+              id="restart-button"
+              onClick={() => window.location.reload()}
+            >
+              Jugar de nuevo
+            </button>
+          </div>
         </div>
-      </div>
-      <div className="container mt-5 p-3" id="game-container" style={{ display: "none", backgroundColor: "rgb(204, 204, 204)" }}>
-        <div className="text-center" id="game">
-          <div className="p-2" id="game-timer" />
-          <div className="p-2" id="game-words" />
-          <input
-            type="text"
-            id="word-input"
-            className="form-control"
-            placeholder="Type here..."
-            onKeyPress={handleKeyPress}
-          />
-        </div>
-      </div>
-      <div className="container mt-5 p-3" id="result-container" style={{ display: "none", backgroundColor: "rgb(204, 204, 204)" }}>
-        <div className="text-center">
-          <h2>Resultado</h2>
-          <p id="result-time" />
-          <p id="result-words" />
-          <button className="btn btn-success btn-lg" id="restart-button">Jugar de nuevo</button>
-        </div>
-      </div>
-    </div>*/
-    <div></div>
+      )}
+    </div>
   );
 };
+
 export default Game;

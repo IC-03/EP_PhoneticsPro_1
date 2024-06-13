@@ -19,6 +19,9 @@ body {
   .keys {
     display: flex;
     flex-direction: column;
+    border: none;
+    border-radius: 5px;
+    margin: 0 5px;
   }
   
   .row {
@@ -27,7 +30,7 @@ body {
     margin-bottom: 10px;
   }
   
-  button {
+  .bttn {
     width: 60px;
     height: 40px;
     margin: 0 5px;
@@ -96,7 +99,7 @@ body {
     color: white;
   }
   
-  button:hover {
+  /*bttn:hover {
     opacity: 0.8;
-  }
+  }*/
   
