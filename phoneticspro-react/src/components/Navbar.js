@@ -7,7 +7,7 @@ const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('id_user');
     if (token) {
       setIsLoggedIn(true);
     } else {
@@ -16,7 +16,7 @@ const Navbar = () => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    sessionStorage.removeItem('id_user');
     setIsLoggedIn(false);
   };
 
@@ -49,13 +49,13 @@ const Navbar = () => {
                   <Link to={"/"} className="nav-link" id="HomeLink">Home</Link>
                 </li>
                 <li className="nav-item">
-                  <Link to={"/perfil"} className="nav-link" id="perfilLink">Perfil</Link>
+                  <Link to={"/perfil"} className="nav-link" id="perfilLink">Perfil de {sessionStorage.getItem('name_user')}</Link>
                 </li>
                 <li className="nav-item">
                   <Link to={"/editar-perfil"} className="nav-link">Editar Perfil</Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" onClick={handleLogout}>Cerrar Sesión</Link>
+                  <Link className="nav-link" onClick={handleLogout} to={"/iniciar-sesion"}>Cerrar Sesión</Link>
                 </li>
               </>
             ) : (

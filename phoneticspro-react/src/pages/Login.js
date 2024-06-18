@@ -68,11 +68,11 @@ const Login = () => {
           },
         });
       } else {
-        //obtenemos el token de acceso jwt
-        const jwt = response.token;
+        //guardamos en el localstorage
+        console.log(response.Usuario.id_user)
+        sessionStorage.setItem('id_user', response.Usuario.id_user)
+        sessionStorage.setItem('name_user', response.Usuario.name_user)
 
-        //guardamos el token en el localstorage
-        localStorage.setItem("token", jwt);
 
         //redireccionamos al home la pagina principal
         navigate("/");

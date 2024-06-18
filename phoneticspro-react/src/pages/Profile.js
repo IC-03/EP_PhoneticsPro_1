@@ -1,5 +1,6 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
+import Attempts from '../components/Attempts';
 import profileimg from '../assets/images/usuario.png';
 
 
@@ -13,14 +14,16 @@ const Profile = () => {
           <div className="text-center">
             <h3>Bienvenido, </h3>
             <div className="mb-2">
-              <img src={profileimg} alt="" style={{ width: 128, height: 128 }} />
+              <img src={profileimg} alt="" style={{ width: 128, height: 128 }} /><br/>
+              {sessionStorage.getItem('name_user')}
             </div>
+
             <div
               className="container"
               style={{ backgroundColor: "rgb(255, 255, 255)" }}
             >
               <h4>Seguimiento Diario</h4>
-              <div id="mostrarAttempt" />
+              <Attempts/>
             </div>
           </div>
         </div>

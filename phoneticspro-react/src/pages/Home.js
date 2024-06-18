@@ -4,7 +4,7 @@ import Game from '../components/Game';
 
 
 const Home = () => {
-
+    
     return (
         <div>
             <Navbar/>
