@@ -48,8 +48,6 @@ const Login = () => {
       const response = await APIInvoke.invokePOST(`api/Users/login`, data);
       const mensaje = response.Mensaje;
 
-      console.log(response);
-
       if (mensaje === "Alerta: email o password incorrectos") {
         const msg =
           "No fue posible iniciar la sesión verifique los datos ingresados.";
@@ -69,7 +67,6 @@ const Login = () => {
         });
       } else {
         //guardamos en el localstorage
-        console.log(response.Usuario.id_user)
         sessionStorage.setItem('id_user', response.Usuario.id_user)
         sessionStorage.setItem('name_user', response.Usuario.name_user)
 

@@ -3,69 +3,37 @@ import { eyeIcons, togglePassword } from "../utils/PasswordEyeForm.js";
 import Navbar from "../components/Navbar";
 import swal from "sweetalert";
 import APIInvoke from "../utils/APIInvoke";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const navigate = useNavigate();
 
   const [usuario, setUsuario] = useState(
     {
-      nombreUsuario: "",
       email: "",
-      password: "",
-      confirmar: ""
+      password_user: "",
+      name_user: ""
     }
   );
 
-  const { nombreUsuario, email, password, confirmar } = usuario;
+  const { name_user, email, password_user } = usuario;
   
   const onChange = (e) => {
     setUsuario(
       {
         ...usuario,
-        [e.target.name]: e.target.value,
+        [e.target.name]: e.target.value
       }
     );
   };
   
   const register = async () => {
-    if (password !== confirmar){
-      const msg = "Las contraseñas son diferentes.";
-      swal({
-          title: 'Error',
-          text: msg,
-          icon: 'error',
-          buttons: {
-              confirm: {
-                  text: 'Ok',
-                  value: true,
-                  visible: true,
-                  className: 'btn btn-danger',
-                  closeModal: true
-              }
-          }
-      });
-    }else if (password.length < 8 || password.length > 20){
-      const msg = "La contraseña deber mínimo 8 caracteres y máximo 20 caracteres.";
-      swal({
-          title: 'Error',
-          text: msg,
-          icon: 'error',
-          buttons: {
-              confirm: {
-                  text: 'Ok',
-                  value: true,
-                  visible: true,
-                  className: 'btn btn-danger',
-                  closeModal: true
-              }
-          }
-      });
-    } else {
         const data = {
-          nombreUsuario: usuario.nombreUsuario,
+          name_user: usuario.name_user,
           email: usuario.email,
-          password: usuario.password
+          password_user: usuario.password_user
         }
-        const response = await APIInvoke.invokePOST(`/api/usuarios`, data);
+        const response = await APIInvoke.invokePOST(`api/Users/`, data);
         const mensaje = response.msg;
 
         if (mensaje === 'El usuario ya existe') {
@@ -86,6 +54,9 @@ const Register = () => {
           });
         } else {
           const msg = "El usuario fue creado correctamente.";
+          sessionStorage.setItem('id_user', response.id_user);
+          sessionStorage.setItem('name_user', response.name_user);
+          navigate("/");
           swal({
               title: 'Información',
               text: msg,
@@ -102,13 +73,11 @@ const Register = () => {
           });
 
           setUsuario({
-              nombreUsuario: '',
               email: '',
-              password: '',
-              confirmar: ''
+              password_user: '',
+              name_user: ''
           })
         }
-    }
   } 
 
   const onSubmit = (e) => {
@@ -139,9 +108,9 @@ const Register = () => {
             type="text"
             className="form-control"
             placeholder="NombreUsuario"
-            id="nombreUsuario"
-            name="nombreUsuario"
-            value={nombreUsuario}
+            id="name_user"
+            name="name_user"
+            value={name_user}
             onChange={onChange}
             required
           />
@@ -168,11 +137,11 @@ const Register = () => {
           <div className="password-wrapper">
             <input
               type={showPassword ? "text" : "password"}
-              id="password"
-              name="password"
+              id="password_user"
+              name="password_user"
               className="form-control"
               placeholder="************"
-              value={password}
+              value={password_user}
               onChange={onChange}
               required
             />
@@ -199,8 +168,6 @@ const Register = () => {
             placeholder="************"
             id="confirmar"
             name="confirmar"
-            value={confirmar}
-            onChange={onChange}
             required
           />
         </div>
