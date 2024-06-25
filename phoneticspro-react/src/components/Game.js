@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import Keyboard from "./Keyboard";
 import "../assets/css/game.css";
-import audiobtn from "../assets/images/sonido.png";
 import swal from "sweetalert";
 import cronometro from "../assets/images/cronometro.png";
 import tempo from "../assets/images/tempo.png";
-import keyboardstyle from "../assets/css/keyboard.css";
 import APIInvoke from "../utils/APIInvoke";
+import CurrentWordAudio from "./CurrentWordAudio";
 
 const Game = () => {
   const [gameMode, setGameMode] = useState(undefined);
@@ -339,24 +338,10 @@ const Game = () => {
                   : Math.max(timeLimit - elapsedTime, 0)
               )}
             </div>
-            <div
-              className="p-2"
-              id="game-words"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <button className={`${keyboardstyle.bttn}$ bttn`}>
-                <img
-                  src={audiobtn}
-                  alt="sonido"
-                  style={{ width: 28, height: 28 }}
-                />
-              </button>
-              <span style={{ marginLeft: "8px" }}>{currentWord}</span>
-            </div>
+            
+            <CurrentWordAudio currentWord={currentWord}/>
+
+
             <input
               type="text"
               id="word-input"
