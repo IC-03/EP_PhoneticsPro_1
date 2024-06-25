@@ -27,22 +27,30 @@ const Keyboard = ({ onCharacterInsert, onDelete, onClear, onEnter }) => {
         </div>
       ))}
       <div className={`${keyboardstyle.bttn}$ row`}>
-        <button className={`${keyboardstyle.bttn}$ keys grey`} onClick={onDelete}>
+        <button 
+          style={{
+            backgroundColor: '#f44336',
+            color: 'white'
+          }}
+          className={`${keyboardstyle.bttn}$ keys grey`} 
+          onClick={onDelete}>
           Borrar
         </button>
         <button
+          style={{
+            backgroundColor: '#4caf50',
+            color: 'white'
+          }}
           className={`${keyboardstyle.bttn}$ keys grey`}
           onClick={onEnter}
         >
           Enviar
         </button>
         <button
-          className={`${keyboardstyle.bttn}$ keys grey`}
-          onClick={() => onCharacterInsert(" ")}
-        >
-          Space
-        </button>
-        <button
+          style={{
+            backgroundColor: '#006fff',
+            color: 'white'
+          }}
           className={`${keyboardstyle.bttn}$ keys grey`}
           onClick={onClear}
         >

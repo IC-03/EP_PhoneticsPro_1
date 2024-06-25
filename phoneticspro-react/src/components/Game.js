@@ -6,6 +6,7 @@ import swal from "sweetalert";
 import cronometro from "../assets/images/cronometro.png";
 import tempo from "../assets/images/tempo.png";
 import keyboardstyle from "../assets/css/keyboard.css";
+import APIInvoke from "../utils/APIInvoke";
 
 const Game = () => {
   const [gameMode, setGameMode] = useState(undefined);
@@ -113,7 +114,7 @@ const Game = () => {
       );
       setShowResults(true);
     }
-  }, [isGameActive]);
+  }, [isGameActive, correctWordsCount, elapsedTime, incorrectWordsCount, wordsTyped]);
 
   const displayNextWord = () => {
     if (words.length > 0) {
@@ -180,6 +181,33 @@ const Game = () => {
 
   const handleCharacterInsert = (char) => {
     setInputValue((prev) => prev + char);
+  };
+
+  const getDate_attempt = () => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Se agrega 1 porque los meses van de 0 a 11
+    const day = currentDate.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+  const SendAttempt = async () => {
+    const user = await APIInvoke.invokeGET(`api/Users/list/${sessionStorage.getItem('id_user')}`);
+    
+
+    const data = {
+      total_attempt: correctWordsCount + incorrectWordsCount,
+      correct_attempt: correctWordsCount,
+      date_attempt: getDate_attempt(),
+      id_user: {
+        id_user: user.id_user,
+        email: user.email,
+        password_user: user.password_user,
+        name_user: user.name_user
+      }
+    };
+
+    await APIInvoke.invokePOST(`api/Attempt/`, data);
   };
 
   return (
@@ -358,7 +386,10 @@ const Game = () => {
             <button
               className="btn btn-success"
               id="restart-button"
-              onClick={() => window.location.reload()}
+              onClick={() => {
+                window.location.reload();
+                SendAttempt();
+              }}
             >
               Jugar de nuevo
             </button>
