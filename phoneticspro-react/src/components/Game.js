@@ -23,6 +23,14 @@ const Game = () => {
   const [elapsedTime, setElapsedTime] = useState(0);
   const timerRef = useRef(null);
 
+  // Para guardar intentos fallidos
+  const [failedAttempts, setFailedAttempts] = useState([]);
+  const [showFailedAttempts, setShowFailedAttempts] = useState(false);
+
+  const handleWordAttempt = (word) => {
+      setFailedAttempts((prevAttempts) => [...prevAttempts, word]);
+  }
+
   useEffect(() => {
     const fetchWords = async () => {
       try {
@@ -40,7 +48,10 @@ const Game = () => {
   }, []);
 
   const handleTimeOptionClick = (selectedTime) => {
-    if (selectedTime.endsWith("s")) {
+    if(showFailedAttempts){
+      setGameMode("take your time");
+      setTimeLimit(selectedTime);
+    } else if (selectedTime.endsWith("s")) {
       setGameMode("against the clock");
       setTimeLimit(parseInt(selectedTime.slice(0, -1)));
     } else {
@@ -112,6 +123,7 @@ const Game = () => {
         `Result Words: Palabras correctas: ${correctWordsCount} / ${wordsTyped}, Palabras incorrectas: ${incorrectWordsCount} / ${wordsTyped}`
       );
       setShowResults(true);
+      setShowFailedAttempts(true);
     }
   }, [isGameActive, correctWordsCount, elapsedTime, incorrectWordsCount, wordsTyped]);
 
@@ -147,6 +159,7 @@ const Game = () => {
       setCorrectWordsCount((prevCount) => prevCount + 1);
       console.log(`Correct words count: ${correctWordsCount + 1}`);
     } else {
+      handleWordAttempt(randomWord);
       setIncorrectWordsCount((prevCount) => prevCount + 1);
       console.log(`Incorrect words count: ${incorrectWordsCount + 1}`);
     }
@@ -188,11 +201,11 @@ const Game = () => {
     const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Se agrega 1 porque los meses van de 0 a 11
     const day = currentDate.getDate().toString().padStart(2, '0');
     return `${year}-${month}-${day}`;
-}
+  }
 
   const SendAttempt = async () => {
     const user = await APIInvoke.invokeGET(`api/Users/list/${sessionStorage.getItem('id_user')}`);
-    
+
 
     const data = {
       total_attempt: correctWordsCount + incorrectWordsCount,
@@ -338,8 +351,8 @@ const Game = () => {
                   : Math.max(timeLimit - elapsedTime, 0)
               )}
             </div>
-            
-            <CurrentWordAudio currentWord={currentWord}/>
+
+            <CurrentWordAudio currentWord={currentWord} />
 
 
             <input
@@ -368,6 +381,31 @@ const Game = () => {
             <h2>Resultados</h2>
             <p id="result-time">{resultTime}</p>
             <p id="result-words">{resultWords}</p>
+            
+            {showFailedAttempts && (
+              <div>
+                
+                <h3>Intentos Fallidos</h3>
+                <ul style={{ listStyle: 'none', padding: 0 }}>
+                  {failedAttempts.map((word, index) => (
+                    <li key={index}>{word}</li>
+                  ))}
+                </ul>
+                <button 
+                  style={{margin: 10}} 
+                  className="btn btn-danger" 
+                  onClick={() => {
+                    /* Aqui hay que hacer que se ejecute el juego, estoy en eso aun.
+                    handleTimeOptionClick(failedAttempts.length)
+                    startCorrection();
+                    setShowFailedAttempts(false);
+                    */
+                    }}>
+                    Corregir Intentos
+                </button>
+              </div>
+            )}
+            
             <button
               className="btn btn-success"
               id="restart-button"
@@ -378,6 +416,9 @@ const Game = () => {
             >
               Jugar de nuevo
             </button>
+
+            {/* Experimental */}
+            
           </div>
         </div>
       )}

@@ -8,7 +8,6 @@ const WordAudioButton = ({ currentWord }) => {
   useEffect(() => {
     if (currentWord && audioRef.current) {
       audioRef.current.src = `${process.env.PUBLIC_URL}/audios/${currentWord}.wav`;
-      console.log(`${process.env.PUBLIC_URL}/audios/${currentWord}.wav`);
     }
   }, [currentWord]);
 
