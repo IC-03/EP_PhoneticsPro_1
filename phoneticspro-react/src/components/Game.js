@@ -48,10 +48,8 @@ const Game = () => {
   }, []);
 
   const handleTimeOptionClick = (selectedTime) => {
-    if(showFailedAttempts){
-      setGameMode("take your time");
-      setTimeLimit(selectedTime);
-    } else if (selectedTime.endsWith("s")) {
+    
+    if (selectedTime.endsWith("s")) {
       setGameMode("against the clock");
       setTimeLimit(parseInt(selectedTime.slice(0, -1)));
     } else {
@@ -128,7 +126,10 @@ const Game = () => {
   }, [isGameActive, correctWordsCount, elapsedTime, incorrectWordsCount, wordsTyped]);
 
   const displayNextWord = () => {
-    if (words.length > 0) {
+    if (showFailedAttempts && failedAttempts.length > 0) {
+      const nextWord = failedAttempts.shift();
+      setCurrentWord(nextWord);
+    } else if (words.length > 0) {
       const randomIndex = Math.floor(Math.random() * words.length);
       setCurrentWord(words[randomIndex]);
       console.log(`New word: ${words[randomIndex]}`);
@@ -220,6 +221,38 @@ const Game = () => {
     };
 
     await APIInvoke.invokePOST(`api/Attempt/`, data);
+
+    window.location.reload();
+  };
+
+  const startCorrection = async () => {
+    const user = await APIInvoke.invokeGET(`api/Users/list/${sessionStorage.getItem('id_user')}`);
+
+
+    const data = {
+      total_attempt: correctWordsCount + incorrectWordsCount,
+      correct_attempt: correctWordsCount,
+      date_attempt: getDate_attempt(),
+      id_user: {
+        id_user: user.id_user,
+        email: user.email,
+        password_user: user.password_user,
+        name_user: user.name_user
+      }
+    };
+
+    await APIInvoke.invokePOST(`api/Attempt/`, data);
+
+    setGameMode("take your time");
+    setTimeLimit(failedAttempts.length);
+    setCorrectWordsCount(0);
+    setIncorrectWordsCount(0);
+    setWordsTyped(0);
+    setShowFailedAttempts(true);
+    setShowResults(false);
+    setIsGameActive(true);
+    startChronometer();
+    displayNextWord();
   };
 
   return (
@@ -382,7 +415,8 @@ const Game = () => {
             <p id="result-time">{resultTime}</p>
             <p id="result-words">{resultWords}</p>
             
-            {showFailedAttempts && (
+            {/* Experimental */}
+            {failedAttempts.length > 0 && (
               <div>
                 
                 <h3>Intentos Fallidos</h3>
@@ -395,11 +429,7 @@ const Game = () => {
                   style={{margin: 10}} 
                   className="btn btn-danger" 
                   onClick={() => {
-                    /* Aqui hay que hacer que se ejecute el juego, estoy en eso aun.
-                    handleTimeOptionClick(failedAttempts.length)
-                    startCorrection();
-                    setShowFailedAttempts(false);
-                    */
+                      startCorrection();
                     }}>
                     Corregir Intentos
                 </button>
@@ -410,14 +440,13 @@ const Game = () => {
               className="btn btn-success"
               id="restart-button"
               onClick={() => {
-                window.location.reload();
                 SendAttempt();
               }}
             >
               Jugar de nuevo
             </button>
 
-            {/* Experimental */}
+            
             
           </div>
         </div>

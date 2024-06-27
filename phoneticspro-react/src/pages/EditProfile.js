@@ -83,6 +83,10 @@ const EditProfile = () => {
         name_user: usuario.new_name_user,
       };
 
+      if(sessionStorage.getItem("name_user") !== data.name_user){
+        sessionStorage.setItem("name_user", data.name_user);
+      }
+
       const response = await APIInvoke.invokePUT(`api/Users/`, data);
       if (response.id === usuario.id_user) {
         swal("Éxito", "Perfil editado correctamente", "success");
