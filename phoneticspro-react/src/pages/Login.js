@@ -147,7 +147,7 @@ const Login = () => {
           </div>
 
           <button
-            className="btn btn-large btn-success text-center" /*onClick={validarLogin}*/
+            className="btn btn-block btn-success text-center mt-2" /*onClick={validarLogin}*/
           >
             Entrar
           </button>
