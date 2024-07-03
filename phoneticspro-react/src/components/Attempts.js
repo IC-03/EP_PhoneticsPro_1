@@ -24,7 +24,6 @@ ChartJS.register(
 const Attempts = () => {
   const [listaPorId, setListaPorId] = useState([]);
   let id = sessionStorage.getItem("id_user");
-  id = parseInt(id);
 
   useEffect(() => {
     const fetchAndCombineAttempts = async () => {
@@ -33,7 +32,7 @@ const Attempts = () => {
         const data = await response.json();
 
         const filteredData = data.filter(
-          (intento) => id === intento.id_user.id_user
+          (intento) => id === intento.user.id
         );
 
         let combinedList = [...filteredData];
@@ -75,14 +74,19 @@ const Attempts = () => {
 
   function getStartOfWeek(date) {
     const currentDate = new Date(date);
-    const day = currentDate.getDay();
-    const diff = currentDate.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
-    return new Date(currentDate.setDate(diff));
+    const day = currentDate.getUTCDay();
+    const diff = currentDate.getUTCDate() - day + (day === 0 ? -6 : 1); // adjust when day is Sunday
+    const startOfWeek = new Date(currentDate.setUTCDate(diff));
+    startOfWeek.setUTCHours(0, 0, 0, 0); // set time to the start of the day
+    return startOfWeek;
   }
 
   function getEndOfWeek(date) {
     const startOfWeek = getStartOfWeek(date);
-    return new Date(startOfWeek.setDate(startOfWeek.getDate() + 6));
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setUTCDate(endOfWeek.getUTCDate() + 6);
+    endOfWeek.setUTCHours(23, 59, 59, 999); // set time to the end of the day
+    return endOfWeek;
   }
 
   const now = new Date();
@@ -104,9 +108,9 @@ const Attempts = () => {
     "Domingo",
   ];
 
-  const weeklyData = daysOfWeek.map((day) => {
+  const weeklyData = daysOfWeek.map((day, index) => {
     const date = new Date(startOfWeek);
-    date.setDate(date.getDate() + daysOfWeek.indexOf(day));
+    date.setUTCDate(startOfWeek.getUTCDate() + index);
     const dateString = formatoFecha(date);
 
     const dailyAttempts = dataThisWeek.find(
@@ -157,17 +161,6 @@ const Attempts = () => {
 
   return (
     <div>
-      {/* 
-      <ul style={{ listStyle: "none", padding: 0 }}>
-        {listaPorId.map((intento, index) => (
-          <li key={index}>
-            {" "}
-            <b>{formatoFecha(intento.date_attempt)}:</b> <br />
-            Intentos totales: {intento.total_attempt}, <br />
-            Intentos correctos: {intento.correct_attempt}.{" "}
-          </li>
-        ))}
-      </ul>*/}
       <div>
         <Line data={data} options={options} />
       </div>
