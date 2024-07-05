@@ -20,15 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 import uis.edu.entornos.PhoneticsProNoSQL.modelo.Attempt;
 import uis.edu.entornos.PhoneticsProNoSQL.servicio.AttemptServicio;
 
-/**
- *
- * @author Carlos
- */
-
-//Swagger
+ //Swagger
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-
 
 @RestController
 @CrossOrigin("*")

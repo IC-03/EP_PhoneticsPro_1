@@ -12,10 +12,6 @@ import org.springframework.http.ResponseEntity;
 import uis.edu.entornos.PhoneticsProNoSQL.modelo.LoginDto;
 import uis.edu.entornos.PhoneticsProNoSQL.modelo.Users;
 import uis.edu.entornos.PhoneticsProNoSQL.servicio.UsersServicio;
-/**
- *
- * @author Carlos
- */
 
 //Swagger
 import io.swagger.annotations.Api;
@@ -31,7 +27,7 @@ public class UsersControlador {
     UsersServicio usersServicio;
     
     //Listar
-    @ApiOperation(value = "Listar todos los usuarios", response = List.class) //swagger
+    @ApiOperation(value = "Listar todos los usuarios", response = List.class)
     @GetMapping("/list")
     public List<Users> listarUsers(){
         return usersServicio.getUsers();
@@ -87,7 +83,7 @@ public class UsersControlador {
     public int login(@RequestBody LoginDto user){
         return usersServicio.login(user);
     }
-
+    
     @ApiOperation(value = "Login de usuario", response = ResponseEntity.class)
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginDto user){

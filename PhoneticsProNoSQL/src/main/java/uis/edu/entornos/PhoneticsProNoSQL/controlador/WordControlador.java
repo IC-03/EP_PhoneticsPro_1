@@ -20,11 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import uis.edu.entornos.PhoneticsProNoSQL.modelo.Word;
 import uis.edu.entornos.PhoneticsProNoSQL.servicio.WordServicio;
 
-/**
- *
- * @author Carlos
- */
-
 //Swagger
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
